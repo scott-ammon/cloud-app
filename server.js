@@ -17,9 +17,10 @@ var port = process.env.PORT || 2000;
 app.set('view engine', 'ejs');
 app.use(ejsLayouts);
 
+var images = [];
 
 app.get('/', function(req, res) {
-	res.render('index');
+	res.render('index', {arr: images, cloud});
 });
 
 app.get('/upload', function(req, res) {
@@ -30,7 +31,8 @@ app.get('/upload', function(req, res) {
 app.post('/upload', upload.single('myFile'), function(req, res) {
   console.log('post route hit!');
   cloud.uploader.upload(req.file.path, function(result) {
-    console.log(result);
+    images.push(result.public_id);
+    res.redirect('/');
   });
 });
 
